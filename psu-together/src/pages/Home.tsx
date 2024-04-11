@@ -1,9 +1,14 @@
 import React from 'react'
 import Navbar from '../components/Navbar'
+import Checkbox from '../components/Checkbox'
 
 function Home() {
   return (
-    <Navbar></Navbar>
+    <div>
+      <Navbar></Navbar>
+      <Checkbox></Checkbox>
+    </div>
+    
   )
 }
 
