@@ -1,15 +1,18 @@
 import React from 'react'
+import navLogo from '../assets/PSU-Together-Logo.svg'
 
 function Navbar() {
   return (
-  <div className="navbar bg-base-100 bg-teal-100">
+  <div className="navbar bg-base-100" style={{ backgroundColor: '#AFD198' }}>
     <div className="flex-none">
       <button className="btn btn-square btn-ghost">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-5 h-5 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
       </button>
     </div>
-    <div className="flex-1">
-      <a className="btn btn-ghost text-xl ">PSU Together</a>
+    <div className="flex-1" style={{ display: 'flex', alignItems: 'center' }}>
+      <a className="btn btn-ghost text-xl" style={{ display: 'inline-block', verticalAlign: 'top' }}>
+        <img src={navLogo} style={{ width: 'auto', height: '80px', marginTop: '-15px'}}/>
+      </a>
     </div>
     <div className="flex-none">
       <button className="btn btn-square btn-ghost">
