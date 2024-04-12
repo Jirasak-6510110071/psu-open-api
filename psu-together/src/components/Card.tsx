@@ -7,7 +7,7 @@ interface Props {
 
 function Card(props: Props) {
   return (
-    <div className="card-normal bg-base-100 shadow-xl my-1 mx-1 rounded-lg border-2">
+    <div className="card-normal bg-base-100 shadow-xl rounded-lg border-2">
       <div className="avatar flex justify-center my-2">
         <div className="w-24 rounded-full ">
           <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
