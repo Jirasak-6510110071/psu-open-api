@@ -1,5 +1,6 @@
 import React from 'react'
 import Student from '../models/Student'
+import UserAvatar from '../assets/useravatar.png'
 
 interface Props {
   StudentData: Student
@@ -7,18 +8,24 @@ interface Props {
 
 function Card(props: Props) {
   return (
-    <div className="card-normal bg-base-100 shadow-xl rounded-lg border-2">
-      <div className="avatar flex justify-center my-2">
-        <div className="w-24 rounded-full ">
-          <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+    <div className='grid grid-rows-2 border-2 border-black rounded-lg p-2 bg-white hover:bg-gray-200'>
+      <div className='grid grid-cols-3'>
+        <div className='w-20 justify-self-center'>
+          <img src={UserAvatar} className='justify-center' />
+        </div>
+        <div className='col-span-2'>
+          <div>
+            {props.StudentData.titleName + props.StudentData.studNameThai + " " + props.StudentData.studSnameThai}
+          </div>
+          <div>
+            {props.StudentData.studentId + " " + props.StudentData.facNameThai}
+          </div>
+          <div>
+            {props.StudentData.campusNameThai}
+          </div>
         </div>
       </div>
-      <div className="card-body ">
-        <h2 className="card-title">{props.StudentData.studNameThai +" " + props.StudentData.studSnameThai}</h2>
-        <p>{props.StudentData.studentId + " " + props.StudentData.facNameThai + " " + props.StudentData.campusNameThai}</p>
-        <div className="card-actions justify-end flex justify-center">
-          <button className="btn btn-primary ">Select</button>
-        </div>
+      <div>
       </div>
     </div>
   )
