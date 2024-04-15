@@ -17,7 +17,7 @@ export class StudentRepository implements IRepository<Student> {
     }
     async getByCampusID(campusID: string): Promise<Student[] | null> {
         const response = await fetch(
-          `https://api-gateway.psu.ac.th/Test/regist/Student?campusID=0${campusID}&facID=&majorID=&offset=0&limit=350`,
+          `https://api-gateway.psu.ac.th/Test/regist/Student?campusID=${campusID}&facID=&majorID=&offset=0&limit=350`,
           {
             method: 'GET',
             headers: authHeaders

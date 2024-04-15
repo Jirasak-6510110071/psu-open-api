@@ -28,20 +28,16 @@ function Home() {
     if (e.target.selectedIndex === 6) {
       fetchData()
     } else{
-      setSelectedValue(e.target.selectedIndex.toString());
+      setSelectedValue('0' + e.target.selectedIndex.toString());
     }
-
-      
   };
 
-  useEffect(() => {
-    fetchDataByCampus()
+   useEffect(() => {
+    fetchDataByCampus();
+    if (!selectedValue) {
+      fetchData();
+    }
   }, [selectedValue]);
-
-  useEffect(() => {
-    fetchData()
-  }, []);
-
   return (
     <>
       <Navbar></Navbar>
