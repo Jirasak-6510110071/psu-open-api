@@ -1,14 +1,12 @@
 import axios from 'axios';
-import Student from "../models/Student";
 import { IRepository } from "./IRepositories";
-import Image from '../models/Image';
+import Subject from '../models/Subject';
 
-export class StudentRepository implements IRepository<Student | Image> {
-  async getData(api : string): Promise<Student | null> {
+export class SubjectRepository implements IRepository<Subject> {
+  async getAll(api : string): Promise<Subject[] | null> {
     return axios.get(api, {
       headers: {
         credential: `api_key=${import.meta.env.VITE_API_KEY}`,
-        token: import.meta.env.VITE_ACCESS_TOKEN
       }
     })
       .then(response => response.data.data[0])
@@ -18,14 +16,14 @@ export class StudentRepository implements IRepository<Student | Image> {
       });
   }
 
-  async getImage(api : string): Promise<Image | null> {
+  async getById(api : string): Promise<Subject[] | null> {
     return axios.get(api, {
-      headers: {
-        credential: `api_key=${import.meta.env.VITE_API_KEY}`,
-        token: import.meta.env.VITE_ACCESS_TOKEN
-      }
+        headers: {
+            credential: `api_key=${import.meta.env.VITE_API_KEY}`,
+            token: import.meta.env.VITE_ACCESS_TOKEN
+          }
     })
-      .then(response => response.data.data[0])
+      .then(response => response.data.data)
       .catch(error => {
         console.error('Error fetching data:', error);
         return null;

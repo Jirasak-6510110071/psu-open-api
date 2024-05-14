@@ -1,4 +1,7 @@
 export interface IRepository<T> {
-    getAll?(): Promise<T[] | null>;
-    getByCampusID?(id: string) : Promise<T[] | null>
+    getAll?(api : string) : Promise<T[] | null>;
+    getById?(api : string) : Promise<T[] | null>;
+
+    getData?(api : string) : Promise<T | null>;
+    getImage?(api : string): Promise<T | null>;
 }
