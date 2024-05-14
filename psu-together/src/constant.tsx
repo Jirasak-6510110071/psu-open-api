@@ -1,0 +1,1 @@
+export const baseUrl = "https://api-gateway.psu.ac.th/Test/regist"
