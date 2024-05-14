@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import Sidebar from '../components/Sidebar'
 import Navbar from '../components/Navbar'
-import { AuthContext } from '../context/AuthProvider';
+import { useAuth } from '../context/AuthProvider';
 import { DataContext } from '../context/DataContext';
 import EventForm from '../components/EventForm';
 import TutorModel from '../models/TutorModel';
@@ -10,7 +10,7 @@ import TutorModel from '../models/TutorModel';
 
 function Tutor() {
     const { dataTutor, removeFromList, removeFromBooking, booking } = useContext(DataContext);
-    const { sidebarToggle, studentData } = useContext(AuthContext);
+    const { sidebarToggle, studentData } = useAuth();
     const [showForm, setShowForm] = useState(false);
     const [myTutor, setMyTutor] = useState<TutorModel[]>([]);
     const [myBooking, setMyBooking] = useState<TutorModel[]>([]);

@@ -8,7 +8,7 @@ export class StudentRepository implements IRepository<Student | Image> {
     return axios.get(api, {
       headers: {
         credential: `api_key=${import.meta.env.VITE_API_KEY}`,
-        token: import.meta.env.VITE_ACCESS_TOKEN
+        token: localStorage.getItem('access_token')
       }
     })
       .then(response => response.data.data[0])
@@ -22,7 +22,7 @@ export class StudentRepository implements IRepository<Student | Image> {
     return axios.get(api, {
       headers: {
         credential: `api_key=${import.meta.env.VITE_API_KEY}`,
-        token: import.meta.env.VITE_ACCESS_TOKEN
+        token: localStorage.getItem('access_token')
       }
     })
       .then(response => response.data.data[0])

@@ -1,18 +1,17 @@
-import { useContext } from 'react'
-import { FaHome, FaLessThan } from "react-icons/fa";
-import { RiCalendarScheduleLine } from "react-icons/ri";
-import { BsPersonBadge } from "react-icons/bs";
-import { AuthContext } from '../context/AuthProvider';
-import { Link } from 'react-router-dom';
-
+import { FaHome, FaLessThan, FaSignOutAlt } from 'react-icons/fa';
+import { RiCalendarScheduleLine } from 'react-icons/ri';
+import { BsPersonBadge } from 'react-icons/bs';
+import { useAuth } from '../context/AuthProvider';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 function Sidebar() {
-  const { studentData, studentImage } = useContext(AuthContext)
-  const { sidebarToggle, setSidebarToggle } = useContext(AuthContext)
+  const { studentData, studentImage, studentSubject, sidebarToggle, setSidebarToggle } = useAuth();
+  const navigate = useNavigate();
+
   return (
     <div
-      className={`h-screen overflow-hidden transition-all bg-gradient-to-b from-zinc-800 to-zinc-900 ${sidebarToggle ? 'fixed w-72' : 'w-0'
+      className={`h-screen overflow-hidden transition-all bg-gradient-to-b from-gray-800 to-gray-900 ${sidebarToggle ? 'fixed w-72' : 'w-0'
         }`}
     >
       <div className="p-4">
@@ -22,21 +21,20 @@ function Sidebar() {
             onClick={() => setSidebarToggle(!sidebarToggle)}
           />
         </div>
-        <div className="flex justify-center">
+        <div className="flex flex-col items-center mt-8">
           {studentImage?.pictureBase64 ? (
             <img
-              className="w-24 h-24 rounded-full m-4 shadow-lg"
+              className="w-24 h-24 rounded-full shadow-lg mb-4"
               src={`data:image/png;base64,${studentImage?.pictureBase64}`}
+              alt="Student"
             />
           ) : (
-            <span className="loading loading-spinner loading-lg m-4 bg-white"></span>
+            <div className="w-24 h-24 rounded-full bg-gray-700 animate-pulse mb-4"></div>
           )}
-        </div>
-        <div className="flex justify-center">
-          <div className="text-white font-semibold bg-gradient-to-r from-sky-500 to-indigo-500 rounded-full px-4 py-1">
+          <div className="text-white font-semibold bg-gradient-to-r from-blue-500 to-purple-500 rounded-full px-4 py-1">
             {studentData?.studNameThai && studentData?.studSnameThai
               ? `${studentData?.studNameThai} ${studentData?.studSnameThai}`
-              : (<span className="loading loading-dots loading-sm bg-white"></span>)}
+              : <div className="h-4 w-32 bg-gray-700 animate-pulse rounded"></div>}
           </div>
         </div>
         <div className="flex justify-center items-center space-x-4 my-4">
@@ -76,26 +74,44 @@ function Sidebar() {
           </div>
         </div>
         <hr className="mt-5 mb-2 border-gray-700"></hr>
-        <ul className="text-gray-300">
-          <li className="mb-2 rounded hover:shadow py-2 hover:bg-zinc-700 transition-colors duration-300">
-            <Link className="px-3 flex items-center" to="/home">
-              <FaHome className="inline-block w-6 h-6 mr-2 text-white" /> Home
-            </Link>
-          </li>
-          <li className="mb-2 rounded hover:shadow py-2 hover:bg-zinc-700 transition-colors duration-300">
-            <Link className="px-3 flex items-center" to="/tutor">
-              <BsPersonBadge className="inline-block w-6 h-6 mr-2 text-white" /> Tutor
-            </Link>
-          </li>
-          <li className="mb-2 rounded hover:shadow py-2 hover:bg-zinc-700 transition-colors duration-300">
-            <Link className="px-3 flex items-center" to="/schedule">
-              <RiCalendarScheduleLine className="inline-block w-6 h-6 mr-2 text-white" /> Schedule
-            </Link>
-          </li>
-        </ul>
+        <nav className="text-gray-300">
+          <ul>
+            <li>
+              <Link
+                className="flex items-center py-3 px-4 rounded hover:bg-gray-700 transition-colors duration-300"
+                to="/home"
+              >
+                <FaHome className="inline-block w-6 h-6 mr-2 text-white" /> Home
+              </Link>
+            </li>
+            <li>
+              <Link
+                className="flex items-center py-3 px-4 rounded hover:bg-gray-700 transition-colors duration-300"
+                to="/tutor"
+              >
+                <BsPersonBadge className="inline-block w-6 h-6 mr-2 text-white" /> Tutor
+              </Link>
+            </li>
+            <li>
+              <Link
+                className="flex items-center py-3 px-4 rounded hover:bg-gray-700 transition-colors duration-300"
+                to="/schedule"
+              >
+                <RiCalendarScheduleLine className="inline-block w-6 h-6 mr-2 text-white" /> Schedule
+              </Link>
+            </li>
+          </ul>
+        </nav>
+        {sidebarToggle ? (
+          <div className="absolute bottom-4 left-4">
+            <Link to="/logout" className="flex items-center px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors duration-300"><FaSignOutAlt className="mr-2" /> Logout</Link>
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
-  )
+  );
 }
 
-export default Sidebar
+export default Sidebar;

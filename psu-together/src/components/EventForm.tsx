@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { AuthContext } from '../context/AuthProvider';
+import { useAuth } from '../context/AuthProvider';
 import { DataContext } from '../context/DataContext';
 
 interface EventData {
@@ -19,7 +19,7 @@ interface Props {
 
 const EventForm: React.FC<Props> = ({ showForm, setShowForm }) => {
     const { dataTutor, addToList, addToBooking } = useContext(DataContext);
-    const { studentData, studentImage, studentSubject } = useContext(AuthContext)
+    const { studentData, studentImage, studentSubject } = useAuth()
     const [formData, setFormData] = useState<EventData>({
         date: '',
         time: '',

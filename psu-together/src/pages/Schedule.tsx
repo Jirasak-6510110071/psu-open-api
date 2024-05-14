@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from 'react';
 import Navbar from '../components/Navbar'
 import Sidebar from '../components/Sidebar';
-import { AuthContext } from '../context/AuthProvider';
+import { useAuth } from '../context/AuthProvider';
 import { DataContext } from '../context/DataContext';
 import { Calendar, momentLocalizer, Event, EventPropGetter } from 'react-big-calendar'
 import moment from 'moment'
@@ -31,7 +31,7 @@ const EventComponent: React.FC<{ event: any }> = ({ event }) => (
 
 
 function Schedule() {
-  const { sidebarToggle, studentData } = useContext(AuthContext)
+  const { sidebarToggle, studentData } = useAuth()
   const { booking } = useContext(DataContext)
   const localizer = momentLocalizer(moment)
   const [events, setEvents] = useState<Event[]>([]);

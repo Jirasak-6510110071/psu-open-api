@@ -1,11 +1,8 @@
-import { useContext} from 'react'
 import { FaBars } from "react-icons/fa"
-import { AuthContext } from '../context/AuthProvider';
-
-
+import { useAuth } from '../context/AuthProvider';
 
 function Navbar() {
-  const {sidebarToggle, setSidebarToggle} = useContext(AuthContext)
+  const {sidebarToggle, setSidebarToggle} = useAuth()
   return (
    <nav className='px-4 py-4 flex justify-between shadow-md'>
     <div className='flex items-center text-xl'>

@@ -1,14 +1,14 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import Navbar from '../components/Navbar'
 import Sidebar from '../components/Sidebar';
-import { AuthContext } from '../context/AuthProvider';
+import { useAuth } from '../context/AuthProvider';
 import { DataContext } from '../context/DataContext';
 import Tutor from '../models/TutorModel';
 
 
 function Home() {
-  const { sidebarToggle, studentData } = useContext(AuthContext)
-  const { dataTutor, removeFromList, addToBooking } = useContext(DataContext);
+  const { sidebarToggle, studentData} = useAuth()
+  const { dataTutor, removeFromList, addToBooking} = useContext(DataContext);
   const isAvatar = (url: string | undefined) => {
     if (url === "useravatar.png") return true;
   };
@@ -21,7 +21,6 @@ function Home() {
     removeFromList(id);
     addToBooking(data)
   };
-
 
   return (
     <div className='flex'>

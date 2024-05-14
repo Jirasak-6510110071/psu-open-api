@@ -1,34 +1,54 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import './index.css'
-import Home from './pages/Home'
-import Tutor from './pages/Tutor'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import Home from './pages/Home';
+import Tutor from './pages/Tutor';
 import { AuthProvider } from './context/AuthProvider';
 import { DataProvider } from './context/DataContext';
-import Appointment from './pages/Schedule'
-import Login from './pages/Login'
+import Appointment from './pages/Schedule';
+import Login from './pages/Login';
+import RedirectPage from './pages/RedirectPage';
+import ProtectedRoute from './components/ProtectedRoute';
+import Logout from './components/Logout';
 
 import {
   createBrowserRouter,
   RouterProvider,
-} from "react-router-dom";
+} from 'react-router-dom';
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Home></Home>,
+    path: '/',
+    element: <Login />,
   },
   {
-    path: "home",
-    element: <Home></Home>,
+    path: '/login',
+    element: <Login />,
   },
   {
-    path: "tutor",
-    element: <Tutor></Tutor>,
+    path: '/redirect',
+    element: <RedirectPage />,
   },
   {
-    path: "schedule",
-    element: <Appointment></Appointment>,
+    path: '/logout', 
+    element: <Logout />,
+  },
+  {
+    element: <ProtectedRoute />, 
+    children: [
+      {
+        path: '/home',
+        element: <Home />,
+      },
+      {
+        path: '/tutor',
+        element: <Tutor />,
+      },
+      {
+        path: '/schedule',
+        element: <Appointment />,
+      },
+    ],
   },
 ]);
 
@@ -40,4 +60,4 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       </DataProvider>
     </AuthProvider>
   </React.StrictMode>,
-)
+);

@@ -20,7 +20,7 @@ export class SubjectRepository implements IRepository<Subject> {
     return axios.get(api, {
         headers: {
             credential: `api_key=${import.meta.env.VITE_API_KEY}`,
-            token: import.meta.env.VITE_ACCESS_TOKEN
+            token: localStorage.getItem('access_token')
           }
     })
       .then(response => response.data.data)
