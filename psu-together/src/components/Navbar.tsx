@@ -1,22 +1,16 @@
-import React from 'react'
+import { FaBars } from "react-icons/fa"
+import { useAuth } from '../context/AuthProvider';
 
 function Navbar() {
+  const {sidebarToggle, setSidebarToggle} = useAuth()
   return (
-  <div className="navbar bg-base-100 bg-teal-100">
-    <div className="flex-none">
-      <button className="btn btn-square btn-ghost">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-5 h-5 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-      </button>
+   <nav className='px-4 py-4 flex justify-between shadow-md'>
+    <div className='flex items-center text-xl'>
+      <FaBars className='text-zinc-800 me-4 cursor-pointer' onClick={() => setSidebarToggle(!sidebarToggle)}/>
+      <span className='text-zinc-800 font-semibold'>PSU-Together</span>
     </div>
-    <div className="flex-1">
-      <a className="btn btn-ghost text-xl ">PSU Together</a>
-    </div>
-    <div className="flex-none">
-      <button className="btn btn-square btn-ghost">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-5 h-5 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
-      </button>
-    </div>
-  </div>
+    <div></div> 
+   </nav>
   )
 }
 
