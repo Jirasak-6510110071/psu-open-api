@@ -9,7 +9,7 @@ import Tutor from '../models/TutorModel';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 interface Events extends Event {
-  isSelf? : string;
+  isBooking? : string;
 }
 
 function mapBookingsToEvents(bookings: Tutor[]): Event[] {
@@ -18,7 +18,16 @@ function mapBookingsToEvents(bookings: Tutor[]): Event[] {
     end: moment(moment(`${booking.date} ${booking.time}`, 'YYYY-MM-DD HH:mm')).add(booking.duration, 'hour').toDate(),
     title: booking.subject,
     location: booking.location,
-    isSelf : booking.std_id
+    isBooking : booking.std_id
+  }));
+}
+
+function mapMyTutorToEvents(myTutor: Tutor[]): Event[] {
+  return myTutor.map(tutor => ({
+    start: moment(`${tutor.date} ${tutor.time}`, 'YYYY-MM-DD HH:mm').toDate(),
+    end: moment(moment(`${tutor.date} ${tutor.time}`, 'YYYY-MM-DD HH:mm')).add(tutor.duration, 'hour').toDate(),
+    title: tutor.subject,
+    location: tutor.location,
   }));
 }
 
@@ -29,25 +38,26 @@ const EventComponent: React.FC<{ event: any }> = ({ event }) => (
   </div>
 );
 
-
 function Schedule() {
   const { sidebarToggle, studentData } = useAuth()
-  const { booking } = useContext(DataContext)
+  const { booking, myTutor} = useContext(DataContext)
   const localizer = momentLocalizer(moment)
   const [events, setEvents] = useState<Event[]>([]);
 
   const eventPropGetter: EventPropGetter<Events> = (event) => {
     const style = {
-      backgroundColor: event.isSelf === studentData?.studentId? '#6db26c' : '#63a1af',
+      backgroundColor: event.isBooking === studentData?.studentId? '#6db26c' : '#63a1af',
     };
     return { style };
   };
 
   useEffect(() => {
     const filterBooking = booking.filter(item => item.status === "confirmed");
-    const mappedEvents = mapBookingsToEvents(filterBooking);
-    setEvents(mappedEvents);
-  }, [booking]);
+    const filtermyTutor = myTutor.filter(item => item.status === "confirmed");
+    const mappedBookingEvents = mapBookingsToEvents(filterBooking);
+    const mappedMyTutorEvents = mapMyTutorToEvents(filtermyTutor);
+    setEvents([...mappedBookingEvents, ...mappedMyTutorEvents]);
+  }, [booking, myTutor]);
   return (
     <div className='flex'>
       <Sidebar />

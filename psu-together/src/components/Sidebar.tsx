@@ -1,13 +1,42 @@
+import React, { useContext } from 'react';
 import { FaHome, FaLessThan, FaSignOutAlt } from 'react-icons/fa';
 import { RiCalendarScheduleLine } from 'react-icons/ri';
 import { BsPersonBadge } from 'react-icons/bs';
 import { useAuth } from '../context/AuthProvider';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { DataContext } from '../context/DataContext';
+import Review from '../models/Review';
 
 
 function Sidebar() {
-  const { studentData, studentImage, studentSubject, sidebarToggle, setSidebarToggle } = useAuth();
-  const navigate = useNavigate();
+  const { studentData, studentImage, sidebarToggle, setSidebarToggle } = useAuth();
+  const { review } = useContext(DataContext);
+
+  const findsumHours = (reviews: Review[]) => {
+    let sum = 0
+    reviews.forEach((item) => {
+      if (item.std_id === studentData?.studentId) {
+        sum += Number(item.hour);
+      }
+    })
+    return sum
+  };
+
+  const findaverage = (reviews: Review[]) => {
+    let sum = 0
+    let count = 0
+    reviews.forEach((item) => {
+      if (item.std_id === studentData?.studentId) {
+        sum += Number(item.rating);
+        count++
+      }
+    })
+    return count > 0 ? sum / count : 0;
+  };
+
+
+  const totalHours = findsumHours(review);
+  const averageRatings = findaverage(review);
 
   return (
     <div
@@ -39,7 +68,9 @@ function Sidebar() {
         </div>
         <div className="flex justify-center items-center space-x-4 my-4">
           <div className="flex items-center space-x-1">
-            <span className="text-amber-500 font-semibold">N/A</span>
+            <span className="text-amber-500 font-semibold" >
+              {averageRatings}
+            </span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="currentColor"
@@ -56,7 +87,9 @@ function Sidebar() {
             </svg>
           </div>
           <div className="flex items-center space-x-1">
-            <span className="text-amber-500 font-semibold">0 Hour</span>
+            <span className="text-amber-500 font-semibold" >
+              {totalHours} hour
+            </span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

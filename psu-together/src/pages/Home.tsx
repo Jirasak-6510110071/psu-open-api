@@ -8,7 +8,7 @@ import Tutor from '../models/TutorModel';
 
 function Home() {
   const { sidebarToggle, studentData} = useAuth()
-  const { dataTutor, removeFromList, addToBooking} = useContext(DataContext);
+  const { dataTutor, removeFromList, addToBooking, updateStatus} = useContext(DataContext);
   const isAvatar = (url: string | undefined) => {
     if (url === "useravatar.png") return true;
   };
@@ -19,7 +19,14 @@ function Home() {
 
   const bookTutor = (id: number, data: Tutor) => {
     removeFromList(id);
-    addToBooking(data)
+    addToBooking(data);
+    updateStatus(id,"pending");
+  };
+
+  const bookTutor_Test = (id: number, data: Tutor) => {
+    removeFromList(id);
+    addToBooking(data);
+    updateStatus(id,"confirmed");
   };
 
   return (
@@ -82,12 +89,19 @@ function Home() {
                     )}
                   </td>
                   {isSelf(item.std_id) ? (
-                    <td className="px-4 py-2"></td>
-                  ) : (
                     <td className="px-4 py-2">
                       <button
                         className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
                         onClick={() => bookTutor(item.id, item)}
+                      >
+                        ทดสอบจอง
+                      </button>
+                    </td>
+                  ) : (
+                    <td className="px-4 py-2">
+                      <button
+                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                        onClick={() => bookTutor_Test(item.id, item)}
                       >
                         จอง
                       </button>
