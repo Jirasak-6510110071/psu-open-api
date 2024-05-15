@@ -18,7 +18,7 @@ interface Props {
 }
 
 const EventForm: React.FC<Props> = ({ showForm, setShowForm }) => {
-    const { dataTutor, addToList, addToBooking } = useContext(DataContext);
+    const { dataTutor, addToList, addToMyTutor, booking, myTutor } = useContext(DataContext);
     const { studentData, studentImage, studentSubject } = useAuth()
     const [formData, setFormData] = useState<EventData>({
         date: '',
@@ -65,7 +65,7 @@ const EventForm: React.FC<Props> = ({ showForm, setShowForm }) => {
         const hasErrors = Object.values(newErrors).some((error) => error !== '');
         if (!hasErrors) {
             const data = {
-                id: dataTutor.length,
+                id: dataTutor.length + myTutor.length + booking.length,
                 std_id: studentData?.studentId,
                 std_name: `${studentData?.studNameThai} ${studentData?.studSnameThai}`,
                 location: formData.location,
@@ -77,8 +77,8 @@ const EventForm: React.FC<Props> = ({ showForm, setShowForm }) => {
                 duration : formData.duration,
                 status: "waiting"
             }
+            addToMyTutor(data);
             addToList(data);
-            addToBooking(data)
             handleButtonClick();
         }
     };

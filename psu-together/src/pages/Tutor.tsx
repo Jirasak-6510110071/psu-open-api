@@ -4,17 +4,49 @@ import Navbar from '../components/Navbar'
 import { useAuth } from '../context/AuthProvider';
 import { DataContext } from '../context/DataContext';
 import EventForm from '../components/EventForm';
-import TutorModel from '../models/TutorModel';
+import Review from '../models/Review';
 
 
 
 function Tutor() {
-    const { dataTutor, removeFromList, removeFromBooking, booking } = useContext(DataContext);
+    const { dataTutor, removeFromList, removeFromBooking, booking, updateStatus, myTutor, removeFromMyTutor, review, addToReview } = useContext(DataContext);
     const { sidebarToggle, studentData } = useAuth();
     const [showForm, setShowForm] = useState(false);
-    const [myTutor, setMyTutor] = useState<TutorModel[]>([]);
-    const [myBooking, setMyBooking] = useState<TutorModel[]>([]);
     const [showMyTutors, setShowMyTutors] = useState(true);
+    const [showReviewForm, setShowReviewForm] = useState(false);
+    const [selectedBooking, setSelectedBooking] = useState<number>(0);
+    const [reviewData, setReviewData] = useState<Review>({
+        id: 0,
+        std_id: '',
+        rating: 0,
+        hour: 0,
+        review: null,
+    });
+
+    const handleReviewSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        const confirmedBooking = booking.find(item => item.id === selectedBooking);
+        if (confirmedBooking) {
+            setShowReviewForm(false);
+            const data = {
+                id: selectedBooking,
+                std_id: confirmedBooking.std_id,
+                rating: reviewData.rating,
+                hour: confirmedBooking.duration,
+                review: reviewData.review,
+            };
+            addToReview(data);
+            updateStatus(confirmedBooking.id, "success"); 
+        }
+    };
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setReviewData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
 
     const handleButtonClick = () => {
         setShowForm(!showForm);
@@ -26,11 +58,98 @@ function Tutor() {
     };
 
     useEffect(() => {
-        const filterData = dataTutor.filter(item => item.std_id === studentData?.studentId);
-        const filterBooking = booking.filter(item => item.std_id !== studentData?.studentId);
-        setMyTutor(filterData)
-        setMyBooking(filterBooking)
-    }, [dataTutor]);
+    }, [dataTutor, booking, myTutor, showReviewForm]);
+
+    const renderButtons_Booking = (status: string, id: number) => {
+        switch (status) {
+            case 'confirmed':
+                return (
+                    <>
+                        <button
+                            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                            onClick={() => {
+                                setShowReviewForm(true);
+                                setSelectedBooking(id);
+                            }}
+                        >
+                            สำเร็จ
+                        </button>
+                    </>
+                );
+            case 'pending':
+                return (
+                    <>
+                        <button
+                            className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+                            onClick={() => {
+                                updateStatus(id, "cancelled");
+                            }}
+                        >
+                            ยกเลิก
+                        </button>
+                    </>
+                );
+            case 'success':
+                return (
+                    <button
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                        onClick={() => removeBooking(id)}
+                    >
+                        ลบ
+                    </button>
+                );
+            case 'cancelled':
+                return (
+                    <button
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                        onClick={() => removeBooking(id)}
+                    >
+                        ลบ
+                    </button>
+                );
+            default:
+                return null;
+        }
+    };
+
+    const renderButtons_Tutor = (status: string, id: number) => {
+        const selected = review.find(item => item.id === id);
+        switch (status) {
+            case 'pending':
+                return (
+                    <>
+                        <button
+                            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-1"
+                            onClick={() => updateStatus(id, "confirmed")}
+                        >
+                            ยืนยัน
+                        </button>
+                        <button
+                            className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+                            onClick={() => updateStatus(id, "cancelled")}
+                        >
+                            ยกเลิก
+                        </button>
+                    </>
+                );
+            case 'success':
+                return (
+                    <div>{selected?.review}</div>
+                );
+            case 'cancelled':
+                return (
+                    <button
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                        onClick={() => removeFromMyTutor(id)}
+                    >
+                        ลบ
+                    </button>
+                );
+            default:
+                return null;
+        }
+    };
+
     return (
         <div className='flex'>
             <Sidebar />
@@ -39,6 +158,58 @@ function Tutor() {
 
                 <div>
                     {showForm && <EventForm showForm={showForm} setShowForm={setShowForm} />}
+                </div>
+                <div>
+                    {showReviewForm && (
+                        <div className="absolute inset-0 flex items-center justify-center z-50">
+                            <div className="bg-white p-6 rounded-lg shadow-lg">
+                                <h2 className="text-xl font-bold mb-4">แบบประเมินความพึงพอใจ</h2>
+                                <form onSubmit={handleReviewSubmit}>
+                                    <div className="mb-4">
+                                        <label htmlFor="rating" className="block font-bold mb-2">
+                                            คะแนนประเมิน:
+                                        </label>
+                                        <input
+                                            type="number"
+                                            id="rating"
+                                            name="rating"
+                                            value={reviewData.rating}
+                                            onChange={handleInputChange}
+                                            min="1"
+                                            max="5"
+                                            className="border border-gray-400 p-2 rounded w-full"
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <label htmlFor="review" className="block font-bold mb-2">
+                                            รีวิว:
+                                        </label>
+                                        <textarea
+                                            id="review"
+                                            name="review"
+                                            value={reviewData.review || ''}
+                                            onChange={handleInputChange}
+                                            className="border border-gray-400 p-2 rounded w-full"
+                                        ></textarea>
+                                    </div>
+                                    <div className="flex justify-end">
+                                        <button
+                                            type="submit"
+                                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                        >
+                                            ส่งรีวิว
+                                        </button>
+                                        <button
+                                            onClick={() => setShowReviewForm(false)}
+                                            className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded ml-2"
+                                        >
+                                            ยกเลิก
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    )}
                 </div>
                 <div className="flex justify-between items-center mb-4">
                     <div className="flex flex-wrap border-b border-gray-200">
@@ -108,21 +279,7 @@ function Tutor() {
                                         <td className="px-4 py-2">{`${item.duration} ชั่วโมง`}</td>
                                         <td className="px-4 py-2">{item.status}</td>
                                         <td className="px-4 py-2">
-                                            {item.status === "confirmed" ? (
-                                                <button
-                                                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                                                    onClick={() => removeBooking(item.id)}
-                                                >
-                                                    สำเร็จ
-                                                </button>
-                                            ) : (
-                                                <button
-                                                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                                                    onClick={() => removeBooking(item.id)}
-                                                >
-                                                    ยกเลิก
-                                                </button>
-                                            )}
+                                            {renderButtons_Tutor(item.status, item.id)}
                                         </td>
                                     </tr>
                                 ))}
@@ -147,7 +304,7 @@ function Tutor() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {myBooking.map((item) => (
+                                {booking.map((item) => (
                                     <tr className="hover" key={item.std_id}>
                                         <td className="px-4 py-2">{`${item.date} ${item.time}`}</td>
                                         <td className="px-4 py-2">{item.subject}</td>
@@ -155,21 +312,7 @@ function Tutor() {
                                         <td className="px-4 py-2">{`${item.duration} ชั่วโมง`}</td>
                                         <td className="px-4 py-2">{item.status}</td>
                                         <td className="px-4 py-2">
-                                            {item.status === "confirmed" ? (
-                                                <button
-                                                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                                                    onClick={() => removeBooking(item.id)}
-                                                >
-                                                    สำเร็จ
-                                                </button>
-                                            ) : (
-                                                <button
-                                                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                                                    onClick={() => removeBooking(item.id)}
-                                                >
-                                                    ยกเลิก
-                                                </button>
-                                            )}
+                                            {renderButtons_Booking(item.status, item.id)}
                                         </td>
                                     </tr>
                                 ))}
